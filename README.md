@@ -7,3 +7,9 @@
 ```shell
 $ [%user%].foundry/bin/forge install smartcontractkit/chainlink-brownie-contracts@0.8.0 --no-commit
 ```
+
+**Build**
+
+```shell
+$ [%user%].foundry/bin/forge build
+```
