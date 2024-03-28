@@ -6,7 +6,7 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/Ag
 
 library PriceConverter {
     function getPriceOfEthInUsd() internal view returns (uint256) {
-        // 0x694AA1769357215DE4FAC081bf1f309aDC325306
+        // 0x694AA1769357215DE4FAC081bf1f309aDC325306 //Sepolia USDtoETH
         AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         (
             ,

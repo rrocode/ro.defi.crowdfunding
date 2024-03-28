@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import {PriceConverter} from "./PriceConverter.sol";
 
 contract FundMe {
     using PriceConverter for uint256;
-
     uint256 public constant MINIMUM_USD = 3e18;
     address[] public funders;
     mapping(address funder => uint256 amount) public addressToAmountFunded;
@@ -25,10 +25,15 @@ contract FundMe {
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate() > MINIMUM_USD, "didn't send enough ETH");
+        require(
+            msg.value.getConversionRate() > MINIMUM_USD,
+            "didn't send enough ETH"
+        );
         // 1e18 = 1 ETH = 1000000000000000000
         funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] = addressToAmountFunded[msg.sender] + msg.value;
+        addressToAmountFunded[msg.sender] =
+            addressToAmountFunded[msg.sender] +
+            msg.value;
     }
 
     function withdraw() public ownerOnly {
@@ -47,9 +52,15 @@ contract FundMe {
         //require(isSendSuccessful, "Send failed");
 
         //call: can call any function on an address. Returns return data (e.g bytes) and success/fail
-        (bool isCallSuccessful, /*bytes memory dataReturned*/ ) =
-            payable(msg.sender).call{value: address(this).balance}("");
+        (bool isCallSuccessful /*bytes memory dataReturned*/, ) = payable(
+            msg.sender
+        ).call{value: address(this).balance}("");
         require(isCallSuccessful, "Call failed");
+    }
+
+    function getVersion() public view returns (uint256) {
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
+        return priceFeed.version();
     }
 
     modifier ownerOnly() {
